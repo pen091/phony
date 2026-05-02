@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Photo Stream</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 20px; padding-bottom: 120px; }
+        h1 { text-align: center; color: #333; }
+        
+        /* The Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card p { padding: 10px; text-align: center; font-weight: bold; }
+
+        /* Floating Bottom Upload Section */
+        .upload-bar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .big-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .big-btn:hover { background: #0056b3; }
+        input[type="file"] { padding: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>My Beautiful Gallery</h1>
+
+    <div class="grid">
+        {% for photo in photos %}
+        <div class="card">
+            <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+            <p>{{ photo.title }}</p>
+        </div>
+        {% empty %}
+        <p style="grid-column: 1/-1; text-align: center;">No photos uploaded yet!</p>
+        {% endfor %}
+    </div>
+
+    <!-- Upload Form -->
+    <div class="upload-bar">
+        <form method="POST" enctype="multipart/form-data" style="display: flex; align-items: center; gap: 15px;">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Photo Title" required>
+            <input type="file" name="image_file" accept="image/*" required>
+            <button type="submit" class="big-btn">Upload to Gallery</button>
+        </form>
+    </div>
+
+</body>
+</html>
